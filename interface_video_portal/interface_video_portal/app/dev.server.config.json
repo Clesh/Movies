@@ -1,0 +1,31 @@
+{
+    "IMAGE":
+    {
+        "GET_URL": "./json/images/:id.json",
+        "ADD_URL": "./server/handlers/handlers_img/handler_img.php"
+    },
+    "PROFESSION":
+    {
+        "GET_URL": "./json/professions/:id.json",
+        "SAVE_URL": "./json/professions/add.json",
+        "SAVE_METHOD": "GET"
+    },
+    "AWARD":
+    {
+        "GET_URL": "./json/awards/:id.json",
+        "SAVE_URL": "./json/awards/add.json",
+        "SAVE_METHOD": "GET"
+    },
+    "GENRE":
+    {
+        "GET_URL": "./json/genres/:id.json",
+        "SAVE_URL": "./json/genres/add.json",
+        "SAVE_METHOD": "GET"
+    },
+    "COUNTRY":
+    {
+        "GET_URL": "./json/countries/:id.json",
+        "SAVE_URL": "./json/countries/add.json",
+        "SAVE_METHOD": "GET"
+    }
+}
