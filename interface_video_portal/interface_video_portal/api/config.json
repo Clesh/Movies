@@ -2,8 +2,13 @@
     "professions":{
         "get":{
             "url":"professions/{id}.{format}",
-            "controller":"",
-            "method":""
+            "controller":"lol",
+            "method":"GET"
+        },
+        "delete":{
+            "url":"professions/{id}.{format}",
+            "controller":"hello",
+            "method":"DELETE"
         }
     }
 }
