@@ -1,0 +1,9 @@
+{
+    "professions":{
+        "get":{
+            "url":"professions/{id}.{format}",
+            "controller":"",
+            "method":""
+        }
+    }
+}

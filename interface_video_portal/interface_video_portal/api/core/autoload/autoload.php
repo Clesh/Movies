@@ -9,6 +9,8 @@
 namespace core\autoload;
 
 
+use Exception;
+
 return
 /**
  *
@@ -20,7 +22,7 @@ function($class_name)
 
 
     if(empty($class_name))
-        throw new AutoloadException('');
+        throw new Exception('Class not found');
 
     //$names = explode('\\', $class_name, 2);
     $path = str_replace('\\', '/', $class_name);
