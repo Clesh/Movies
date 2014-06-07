@@ -26,10 +26,6 @@ class Route
     /**
      * @var string
      */
-    protected $params;
-    /**
-     * @var string
-     */
     protected $controllerName;
 
     /**
@@ -53,6 +49,46 @@ class Route
     public function testPath($path,$method)
     {
         return (bool)preg_match($this->templatePath, $path) && $method == $this->method;
+    }
+
+    public function processParams($path)
+    {
+        $params = array();
+        $pathArray = $this->parsePathToArray($path);
+        $templateArray = $this->parsePathToArray($this->path);
+
+        for($i = 0; $i != count($pathArray); $i++)
+        {
+            if(!($paramName = $this->parseParamName($templateArray[$i])))
+                continue;
+
+            $params[$paramName] = $pathArray[$i];
+        }
+
+        return $params;
+    }
+
+    protected function parseParamName($str)
+    {
+        if(!preg_match('/^{[0-9A-z]+}$/',$str))
+            return false;
+
+        return rtrim(ltrim($str,'{'),'}');
+    }
+
+    protected function parsePathToArray($path)
+    {
+        $pathParts = array();
+
+        foreach (explode('/', $path) as $slashPart)
+        {
+            foreach (explode('.', $slashPart) as $pointsPart)
+            {
+                $pathParts[] = $pointsPart;
+            }
+        }
+
+        return $pathParts;
     }
 
     /**

@@ -10,8 +10,9 @@ spl_autoload_register($autoloadFun);
 $o = new Router();
 echo $o->parseUrl();
 
-$route = new Route('professions/{id}.{json}', 'prof', 'GET');
-$a=$route->testPath('professions/1.json','GET');
+$route = new Route('professions/{cat}/cle/{id}.{format}', 'prof', 'GET');
+//$a=$route->testPath('professions/trolol/1.json','GET');
+$a=$route->processParams('professions/trolol/cle/1.json');
 
 
 
