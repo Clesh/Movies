@@ -1,6 +1,6 @@
 <?php
-return function ($id,$format)
+return function ($id)
 {
-    $data="id:{$id},format:{$format}";
+    $data="profession. id:{$id}";
     return $data;
 };

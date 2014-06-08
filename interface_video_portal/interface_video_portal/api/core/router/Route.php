@@ -62,6 +62,10 @@ class Route
         return $this->processParams($path);
     }
 
+    /**
+     * @param string $path
+     * @return array
+     */
     protected function processParams($path)
     {
         $params = array();
@@ -79,6 +83,10 @@ class Route
         return $params;
     }
 
+    /**
+     * @param string $str
+     * @return bool|string
+     */
     protected function parseParamName($str)
     {
         if(!preg_match('/^{[0-9A-z]+}$/',$str))
@@ -87,6 +95,10 @@ class Route
         return rtrim(ltrim($str,'{'),'}');
     }
 
+    /**
+     * @param string $path
+     * @return array
+     */
     protected function parsePathToArray($path)
     {
         $pathParts = array();

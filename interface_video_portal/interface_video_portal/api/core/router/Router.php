@@ -1,24 +1,35 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Dmitriy
- * Date: 07.06.14
- * Time: 22:07
- */
 
 namespace core\router;
+use core\formatter\Formatter;
 
 
+/**
+ * Class Router
+ * @package core\router
+ */
 class Router
 {
+    /**
+     *
+     */
     const CONTROLLER_BASE_PATH = 'controllers/';
+    /**
+     * @var Route[]
+     */
     protected $config;
 
+    /**
+     * @param string $configPath
+     */
     function __construct($configPath)
     {
         $this->loadConfig($configPath);
     }
 
+    /**
+     * @return string
+     */
     public function processUrl()
     {
         $url = $this->getUrl();
@@ -38,14 +49,20 @@ class Router
         }
 
         $controller = $this->loadController($controllerName);
-        return call_user_func_array($controller,$params);
+        return new Formatter(call_user_func_array($controller,$params),$params['format']);
     }
 
+    /**
+     * @return string
+     */
     protected function getMethod()
     {
         return $_SERVER['REQUEST_METHOD'];
     }
 
+    /**
+     * @return string
+     */
     protected function getUrl()
     {
         $url = $_GET['customUrl'];
@@ -54,6 +71,9 @@ class Router
         return $url;
     }
 
+    /**
+     * @param string $path
+     */
     protected function loadConfig($path)
     {
         $configArray=json_decode(file_get_contents($path));
@@ -67,6 +87,11 @@ class Router
         $this->config = $config;
     }
 
+    /**
+     * @param mixed $obj
+     * @param string $cb
+     * @param null $key
+     */
     protected function walkObjectProperties($obj,$cb,$key = null)
     {
         if (is_object($obj))
@@ -84,7 +109,7 @@ class Router
     }
 
     /**
-     * @param $controllerName
+     * @param string $controllerName
      * @return string
      */
     protected function processControllerPath($controllerName)
@@ -94,8 +119,8 @@ class Router
     }
 
     /**
-     * @param $controllerName
-     * @return callable
+     * @param string $controllerName
+     * @return \Closure callable
      * @throws \Exception
      */
     protected function loadController($controllerName)
