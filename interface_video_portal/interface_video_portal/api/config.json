@@ -2,7 +2,7 @@
     "professions":{
         "get":{
             "url":"professions/{id}.{format}",
-            "controller":"lol",
+            "controller":"professions/get.php",
             "method":"GET"
         },
         "delete":{

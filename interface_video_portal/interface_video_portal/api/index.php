@@ -7,8 +7,8 @@ $autoloadFun = require 'core/autoload/autoload.php';
 
 spl_autoload_register($autoloadFun);
 
-$o = new Router();
-echo $o->parseUrl();
+$o = new Router('config.json');
+echo $o->processUrl();
 
 //$route = new Route('professions/{cat}/cle/{id}.{format}', 'prof', 'GET');
 //$a=$route->processPath('professions/trolol/1.json','GET');
@@ -16,6 +16,6 @@ echo $o->parseUrl();
 
 
 
-echo $_GET['customUrl'];
+//echo $_GET['customUrl'];
 
 

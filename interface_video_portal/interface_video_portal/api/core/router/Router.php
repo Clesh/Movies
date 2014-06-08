@@ -11,28 +11,23 @@ namespace core\router;
 
 class Router
 {
-    protected $a;
+    const CONTROLLER_BASE_PATH = 'controllers/';
+    protected $config;
 
-    function __construct()
+    function __construct($configPath)
     {
-        $a = 10;
+        $this->loadConfig($configPath);
     }
 
-    public function parseUrl()
+    public function processUrl()
     {
-        $config = array();
-        $config[] = new Route('professions/{id}.{format}', 'controllers/images/get.php', 'GET');
-        $config[] = new Route('professions/{cat}/{id}.{format}', 'prof2', 'POST');
-        $config[] = new Route('professions/{cat}/cle/{id}.{format}', 'prof3', 'GET');
-
-        //$url = $_GET['customUrl'];
-        $url = 'professions/1.json';
-        $method = 'GET';
+        $url = $this->getUrl();
+        $method = $this->getMethod();
         $controllerName = '';
         $params = array();
 
         /** @var $route Route */
-        foreach ($config as $route)
+        foreach ($this->config as $route)
         {
             if(!($tmpParams = $route->processPath($url,$method)))
                 continue;
@@ -42,8 +37,74 @@ class Router
             break;
         }
 
-        /** @var $controller \Closure */
-        $controller = require($controllerName);
+        $controller = $this->loadController($controllerName);
         return call_user_func_array($controller,$params);
+    }
+
+    protected function getMethod()
+    {
+        return $_SERVER['REQUEST_METHOD'];
+    }
+
+    protected function getUrl()
+    {
+        $url = $_GET['customUrl'];
+        //$url = ltrim($url,'api/');
+        $url = trim($url,'/');
+        return $url;
+    }
+
+    protected function loadConfig($path)
+    {
+        $configArray=json_decode(file_get_contents($path));
+        $config=array();
+        $this->walkObjectProperties($configArray,function($value, $key)use(&$config){
+            if(!isset($value->url) || !isset($value->controller) || !isset($value->method))
+                return;
+            $config[] = new Route($value->url,$value->controller,$value->method);
+        });
+
+        $this->config = $config;
+    }
+
+    protected function walkObjectProperties($obj,$cb,$key = null)
+    {
+        if (is_object($obj))
+        {
+            foreach ($obj as $x => $value)
+            {
+                $this->walkObjectProperties($value, $cb, $x);
+            }
+        }
+        else
+            return;
+
+        if($key)
+            $cb($obj,$key);
+    }
+
+    /**
+     * @param $controllerName
+     * @return string
+     */
+    protected function processControllerPath($controllerName)
+    {
+        $controllerPath = $this::CONTROLLER_BASE_PATH . $controllerName;
+        return $controllerPath;
+    }
+
+    /**
+     * @param $controllerName
+     * @return callable
+     * @throws \Exception
+     */
+    protected function loadController($controllerName)
+    {
+        $controllerPath = $this->processControllerPath($controllerName);
+        if (!file_exists($controllerPath))
+            throw new \Exception("Controller not found: path={$controllerPath}");
+        /** @var $controller \Closure */
+        $controller = require($controllerPath);
+        return $controller;
     }
 }
