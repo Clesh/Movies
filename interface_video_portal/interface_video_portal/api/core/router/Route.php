@@ -42,16 +42,27 @@ class Route
     }
 
     /**
-     * @param string $path
-     * @param string $method
-     * @return bool
+     * @return string
      */
-    public function testPath($path,$method)
+    public function getControllerName()
     {
-        return (bool)preg_match($this->templatePath, $path) && $method == $this->method;
+        return $this->controllerName;
     }
 
-    public function processParams($path)
+    /**
+     * @param string $path
+     * @param string $method
+     * @return bool|array
+     */
+    public function processPath($path,$method)
+    {
+        if(!((bool)preg_match($this->templatePath, $path) && $method == $this->method))
+            return false;
+
+        return $this->processParams($path);
+    }
+
+    protected function processParams($path)
     {
         $params = array();
         $pathArray = $this->parsePathToArray($path);
